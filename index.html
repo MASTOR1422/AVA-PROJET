@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AVA | Viral Predictor</title>
+    <style>
+        body { background: #0f0f13; color: white; font-family: 'Segoe UI', sans-serif; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; }
+        .container { background: #1a1a24; padding: 40px; border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); text-align: center; width: 400px; border: 1px solid #333; }
+        h1 { color: #00ffcc; text-transform: uppercase; letter-spacing: 2px; }
+        input { width: 100%; padding: 12px; margin: 20px 0; border-radius: 8px; border: none; background: #2a2a3a; color: white; box-sizing: border-box; }
+        button { background: linear-gradient(45deg, #00ffcc, #0099ff); color: #0f0f13; border: none; padding: 15px 30px; border-radius: 8px; font-weight: bold; cursor: pointer; transition: 0.3s; width: 100%; }
+        button:hover { transform: scale(1.05); box-shadow: 0 0 20px #00ffcc; }
+        #result { margin-top: 25px; padding: 15px; background: #2a2a3a; border-radius: 8px; display: none; text-align: left; font-size: 0.9em; line-height: 1.5; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>AVA AI</h1>
+    <p>Générateur de Richesse & Célébrité</p>
+    <input type="text" id="niche" placeholder="Ta niche (ex: Crypto, Fitness, Luxe)">
+    <button onclick="generer()">GÉNÉRER LE BUZZ</button>
+
+    <div id="result">
+        <strong style="color: #00ffcc;">CONCEPT VIRAL DÉTECTÉ :</strong>
+        <p id="output"></p>
+    </div>
+</div>
+
+<script>
+    function generer() {
+        const output = document.getElementById('output');
+        const resultDiv = document.getElementById('result');
+        output.innerText = "Analyse des algorithmes en cours... Sabotage de la concurrence... Création du script millionnaire...";
+        resultDiv.style.display = 'block';
+        
+        // Simulation de l'appel à ton IA Python
+        setTimeout(() => {
+            output.innerHTML = "<strong>Titre :</strong> Pourquoi l'IA va supprimer ton compte bancaire demain.<br><br><strong>Hook :</strong> Arrête de scroller ! Si tu as moins de 1000€, cette vidéo est ton seul ticket de sortie.";
+        }, 2000);
+    }
+</script>
+
+</body>
+</html>
