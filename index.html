@@ -12,7 +12,7 @@
         button { background: linear-gradient(135deg, #00f2ff, #7000ff); color: white; border: none; padding: 16px; border-radius: 12px; font-weight: bold; cursor: pointer; width: 100%; font-size: 1.1em; transition: 0.3s; }
         button:hover { transform: translateY(-3px); box-shadow: 0 10px 20px rgba(112,0,255,0.4); }
         #loader { display: none; margin-top: 20px; color: #00f2ff; font-style: italic; }
-        #result { margin-top: 25px; padding: 20px; background: rgba(255,255,255,0.05); border-radius: 12px; display: none; text-align: left; border-left: 4px solid #00f2ff; white-space: pre-wrap; }
+        #result { margin-top: 25px; padding: 20px; background: rgba(255,255,255,0.05); border-radius: 12px; display: none; text-align: left; border-left: 4px solid #00f2ff; white-space: pre-wrap; line-height: 1.5; }
     </style>
 </head>
 <body>
@@ -26,7 +26,7 @@
     <div id="loader">Analyse des tendances mondiales...</div>
     <div id="result">
         <strong style="color: #00f2ff;">CONCEPT GÉNÉRÉ :</strong>
-        <p id="output" style="color: #ddd;"></p>
+        <p id="output" style="color: #ddd; margin-top: 10px;"></p>
     </div>
 </div>
 
@@ -36,6 +36,8 @@
         const loader = document.getElementById('loader');
         const resultDiv = document.getElementById('result');
         const output = document.getElementById('output');
+        
+        // Ta clé API
         const API_KEY = "AIzaSyBgi3bizPYDaI8iTRRnGHJvj9wEGS8OhRo"; 
 
         if(!niche) return alert("Indique une niche !");
@@ -44,30 +46,32 @@
         resultDiv.style.display = 'none';
 
         try {
-            // URL MISE À JOUR (v1 au lieu de v1beta)
+            // URL CORRIGÉE : Utilisation de la version v1 stable
             const url = `https://generativelanguage.googleapis.com/v1/models/gemini-1.5-flash:generateContent?key=${API_KEY}`;
             
             const response = await fetch(url, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({
-                    contents: [{ parts: [{ text: `Donne un titre viral et un script TikTok pour la niche : ${niche}` }] }]
+                    contents: [{ parts: [{ text: `Agis en expert TikTok. Donne un titre viral et un script de 30 secondes pour la niche : ${niche}` }] }]
                 })
             });
 
             const data = await response.json();
 
             if (data.candidates && data.candidates[0].content) {
-                output.innerText = data.candidates[0].content.parts[0].text;
+                const texteIA = data.candidates[0].content.parts[0].text;
+                output.innerText = texteIA;
                 loader.style.display = 'none';
                 resultDiv.style.display = 'block';
             } else {
-                alert("Erreur Google : " + (data.error ? data.error.message : "Réponse vide"));
                 loader.style.display = 'none';
+                const msgErreur = data.error ? data.error.message : "Erreur inconnue";
+                alert("Erreur Google : " + msgErreur);
             }
         } catch (error) {
             loader.style.display = 'none';
-            alert("Erreur de réseau : " + error.message);
+            alert("Erreur de connexion : " + error.message);
         }
     }
 </script>
