@@ -2,22 +2,22 @@
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
-    <title>K2GB IA | Version 3.0</title>
+    <title>K2GB IA | FINAL FIX</title>
     <style>
-        body { background: #0b0b0f; color: #00f2ff; font-family: sans-serif; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; }
-        .card { background: #16161e; padding: 30px; border-radius: 20px; border: 1px solid #2a2a3a; text-align: center; width: 350px; }
-        input { width: 100%; padding: 12px; margin: 15px 0; border-radius: 8px; border: none; background: #0f0f15; color: white; box-sizing: border-box; }
-        button { width: 100%; padding: 12px; background: linear-gradient(135deg, #00f2ff, #7000ff); color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: bold; }
-        #output { margin-top: 20px; color: white; text-align: left; font-size: 0.9em; white-space: pre-wrap; }
+        body { background: #000; color: #00f2ff; font-family: sans-serif; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; }
+        .card { background: #111; padding: 30px; border-radius: 20px; border: 2px solid #00f2ff; text-align: center; width: 350px; }
+        input { width: 100%; padding: 12px; margin: 15px 0; border-radius: 8px; border: none; background: #222; color: white; box-sizing: border-box; }
+        button { width: 100%; padding: 12px; background: #00f2ff; color: black; border: none; border-radius: 8px; cursor: pointer; font-weight: bold; }
+        #output { margin-top: 20px; color: white; text-align: left; white-space: pre-wrap; }
     </style>
 </head>
 <body>
 
 <div class="card">
-    <h1>K2GB IA V3</h1>
-    <p style="color: #888;">Générateur de Viralité</p>
-    <input type="text" id="niche" placeholder="Ta niche (ex: Sport, Argent...)">
-    <button onclick="generer()">GÉNÉRER LE BUZZ</button>
+    <h1>K2GB IA (V4)</h1>
+    <p>Le moteur est prêt.</p>
+    <input type="text" id="niche" placeholder="Ex: Argent, Sport...">
+    <button onclick="generer()">LANCER L'IA</button>
     <div id="output"></div>
 </div>
 
@@ -27,18 +27,18 @@
         const output = document.getElementById('output');
         const API_KEY = "AIzaSyBgi3bizPYDaI8iTRRnGHJvj9wEGS8OhRo";
 
-        if(!niche) return alert("Choisis une niche !");
-        output.innerText = "Analyse en cours...";
+        if(!niche) return alert("Indique une niche !");
+        output.innerText = "Connexion aux serveurs Google...";
 
         try {
-            // URL MISE À JOUR : On utilise v1beta mais avec la syntaxe exacte exigée par Google
-            const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${API_KEY}`;
+            // ON UTILISE GEMINI-PRO (LE PLUS STABLE)
+            const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent?key=${API_KEY}`;
             
             const response = await fetch(url, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({
-                    contents: [{ parts: [{ text: "Donne un titre TikTok viral pour la niche : " + niche }] }]
+                    contents: [{ parts: [{ text: "Agis comme un expert marketing. Donne un titre viral TikTok pour : " + niche }] }]
                 })
             });
 
@@ -47,32 +47,10 @@
             if (data.candidates && data.candidates[0].content) {
                 output.innerText = data.candidates[0].content.parts[0].text;
             } else {
-                // Si ça échoue encore, on essaie le modèle "pro" automatiquement
-                output.innerText = "Tentative avec le moteur secondaire...";
-                secours(niche);
+                output.innerText = "Erreur de réponse : " + JSON.stringify(data.error.message);
             }
         } catch (e) {
-            output.innerText = "Erreur : " + e.message;
-        }
-    }
-
-    async function secours(niche) {
-        const output = document.getElementById('output');
-        const API_KEY = "AIzaSyBgi3bizPYDaI8iTRRnGHJvj9wEGS8OhRo";
-        const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent?key=${API_KEY}`;
-        
-        const response = await fetch(url, {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({
-                contents: [{ parts: [{ text: "Donne un titre viral TikTok pour : " + niche }] }]
-            })
-        });
-        const data = await response.json();
-        if(data.candidates) {
-            output.innerText = data.candidates[0].content.parts[0].text;
-        } else {
-            output.innerText = "Erreur critique Google : " + (data.error ? data.error.message : "Inconnu");
+            output.innerText = "Erreur réseau : " + e.message;
         }
     }
 </script>
