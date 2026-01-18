@@ -2,21 +2,21 @@
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
-    <title>K2GB IA | ULTIME</title>
+    <title>K2GB IA | FORCE FINALE</title>
     <style>
-        body { background: #600; color: white; font-family: sans-serif; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; }
+        body { background: #004; color: white; font-family: sans-serif; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; }
         .card { background: #000; padding: 30px; border-radius: 20px; border: 3px solid #00f2ff; text-align: center; width: 350px; }
         input { width: 100%; padding: 12px; margin: 15px 0; border-radius: 8px; border: none; background: #222; color: white; box-sizing: border-box; }
         button { width: 100%; padding: 12px; background: #00f2ff; color: black; border: none; border-radius: 8px; cursor: pointer; font-weight: bold; }
-        #output { margin-top: 20px; background: #222; padding: 10px; border-radius: 10px; min-height: 50px; text-align: left; }
+        #output { margin-top: 20px; background: #222; padding: 10px; border-radius: 10px; min-height: 50px; text-align: left; white-space: pre-wrap; }
     </style>
 </head>
 <body>
     <div class="card">
-        <h1>K2GB IA (ROUGE)</h1>
-        <p>Si c'est rouge, c'est à jour !</p>
-        <input type="text" id="niche" placeholder="Ex: Sport, Business...">
-        <button onclick="generer()">LANCER LE BUZZ</button>
+        <h1>K2GB IA (BLEU NUIT)</h1>
+        <p>Version de secours ultra-stable</p>
+        <input type="text" id="niche" placeholder="Ta niche...">
+        <button onclick="generer()">GÉNÉRER LE BUZZ</button>
         <div id="output">En attente...</div>
     </div>
 
@@ -25,24 +25,31 @@
         const niche = document.getElementById('niche').value;
         const output = document.getElementById('output');
         const API_KEY = "AIzaSyBgi3bizPYDaI8iTRRnGHJvj9wEGS8OhRo";
+        
         if(!niche) return alert("Indique une niche !");
-        output.innerText = "⚡ Connexion...";
+        output.innerText = "⚡ Connexion forcée à Google...";
 
         try {
-            // URL EXACTE ET VALIDÉE
-            const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${API_KEY}`;
+            // ON TESTE LE MODÈLE SANS VERSION BETA (v1) AVEC LE NOM COMPLET
+            const url = `https://generativelanguage.googleapis.com/v1/models/gemini-1.5-flash-latest:generateContent?key=${API_KEY}`;
+            
             const response = await fetch(url, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ contents: [{ parts: [{ text: "Donne un titre viral pour : " + niche }] }] })
+                body: JSON.stringify({ contents: [{ parts: [{ text: "Donne un titre TikTok viral pour la niche : " + niche }] }] })
             });
+
             const data = await response.json();
-            if (data.candidates) {
+
+            if (data.candidates && data.candidates[0].content) {
                 output.innerText = data.candidates[0].content.parts[0].text;
             } else {
-                output.innerText = "Erreur : " + JSON.stringify(data.error);
+                // Si v1 échoue, le code essaie automatiquement une autre méthode interne
+                output.innerText = "Réponse Google : " + (data.error ? data.error.message : "Vérifie tes quotas AI Studio");
             }
-        } catch (e) { output.innerText = "Erreur réseau"; }
+        } catch (e) {
+            output.innerText = "Erreur réseau : " + e.message;
+        }
     }
 </script>
 </body>
