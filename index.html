@@ -44,7 +44,9 @@
         resultDiv.style.display = 'none';
 
         try {
-            const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${API_KEY}`;
+            // URL MISE À JOUR (v1 au lieu de v1beta)
+            const url = `https://generativelanguage.googleapis.com/v1/models/gemini-1.5-flash:generateContent?key=${API_KEY}`;
+            
             const response = await fetch(url, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
@@ -60,7 +62,7 @@
                 loader.style.display = 'none';
                 resultDiv.style.display = 'block';
             } else {
-                alert("Erreur Google : " + JSON.stringify(data.error));
+                alert("Erreur Google : " + (data.error ? data.error.message : "Réponse vide"));
                 loader.style.display = 'none';
             }
         } catch (error) {
