@@ -19,14 +19,14 @@
 
 <div class="card">
     <h1>K2GB IA</h1>
-    <p style="color: #888;">L'IA qui crée ta fortune virale.</p>
+    <p style="color: #888;">L'algorithme qui crée ta fortune.</p>
     <input type="text" id="niche" placeholder="Ex: Crypto, Immobilier, Coaching...">
     <button onclick="appelerIA()">GÉNÉRER LE BUZZ</button>
     
     <div id="loader">Analyse des tendances mondiales...</div>
     <div id="result">
         <strong style="color: #00f2ff;">CONCEPT GÉNÉRÉ :</strong>
-        <p id="output"></p>
+        <p id="output" style="color: #ddd;"></p>
     </div>
 </div>
 
@@ -36,8 +36,6 @@
         const loader = document.getElementById('loader');
         const resultDiv = document.getElementById('result');
         const output = document.getElementById('output');
-        
-        // TA CLÉ API EST ICI
         const API_KEY = "AIzaSyBgi3bizPYDaI8iTRRnGHJvj9wEGS8OhRo"; 
 
         if(!niche) return alert("Indique une niche !");
@@ -47,35 +45,27 @@
 
         try {
             const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${API_KEY}`;
-            
             const response = await fetch(url, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({
-                    contents: [{ parts: [{ text: `Agis comme un expert en viralité. Donne un titre choc et un script de 30 secondes pour une vidéo TikTok sur la niche : ${niche}. Le ton doit être provocateur et captivant.` }] }]
+                    contents: [{ parts: [{ text: `Donne un titre viral et un script TikTok pour la niche : ${niche}` }] }]
                 })
             });
 
             const data = await response.json();
 
-            // Vérification si l'IA a répondu sans erreur
             if (data.candidates && data.candidates[0].content) {
-                const texteIA = data.candidates[0].content.parts[0].text;
+                output.innerText = data.candidates[0].content.parts[0].text;
                 loader.style.display = 'none';
                 resultDiv.style.display = 'block';
-                output.innerText = texteIA;
-            } else if (data.error) {
-                loader.style.display = 'none';
-                alert("Erreur Google : " + data.error.message);
             } else {
+                alert("Erreur Google : " + JSON.stringify(data.error));
                 loader.style.display = 'none';
-                alert("Réponse inattendue de l'IA.");
             }
-
         } catch (error) {
             loader.style.display = 'none';
-            alert("Erreur réseau : Impossible de joindre l'IA.");
-            console.error(error);
+            alert("Erreur de réseau : " + error.message);
         }
     }
 </script>
