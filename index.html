@@ -3,6 +3,7 @@ async function appelerIA() {
     const loader = document.getElementById('loader');
     const resultDiv = document.getElementById('result');
     const output = document.getElementById('output');
+    const API_KEY = "AIzaSyBgi3bizPYDaI8iTRRnGHJvj9wEGS8OhRo"; 
 
     if(!niche) return alert("Indique une niche !");
 
@@ -10,22 +11,30 @@ async function appelerIA() {
     resultDiv.style.display = 'none';
 
     try {
-        const response = await fetch(`/api/generate?niche=${encodeURIComponent(niche)}`);
+        // On utilise l'URL directe de Google
+        const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${API_KEY}`;
+        
+        const response = await fetch(url, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+                contents: [{ parts: [{ text: `Donne un titre viral et un script TikTok pour la niche : ${niche}` }] }]
+            })
+        });
+
         const data = await response.json();
 
-        // On vérifie si l'IA a bien répondu
         if (data.candidates && data.candidates[0].content) {
-            const texteIA = data.candidates[0].content.parts[0].text;
+            output.innerText = data.candidates[0].content.parts[0].text;
             loader.style.display = 'none';
             resultDiv.style.display = 'block';
-            output.innerText = texteIA;
         } else {
-            // Si ça échoue, on affiche l'erreur réelle de Google
+            // Affiche l'erreur réelle de Google pour qu'on sache !
+            alert("Erreur Google : " + JSON.stringify(data.error));
             loader.style.display = 'none';
-            alert("Message de Google : " + (data.error || "Réponse incomplète"));
         }
     } catch (error) {
         loader.style.display = 'none';
-        alert("Erreur réseau. Vérifie ta connexion.");
+        alert("Erreur de réseau : " + error.message);
     }
 }
